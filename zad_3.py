@@ -1,4 +1,3 @@
-import pandas as pd
 import csv
 
 with open ("zadanie_4_triangle_big.txt", "rt") as file:
@@ -9,19 +8,28 @@ with open ("zadanie_4_triangle_big.txt", "rt") as file:
         row = list(map(int, row))
         row.extend([0] * (999 - len(row)))
         data.append(row)
-data = pd.DataFrame(data)
 
 
-def Add_V(df, x, z):
-    for row in range(x - 1, -1, -1):
-        for col in range(row + 1):
+    def maxSum(tri, n):
+        if n > 1:
+            tri[1][1] = tri[1][1] + tri[0][0]
+            tri[1][0] = tri[1][0] + tri[0][0]
 
-            if (df.iloc[row + 1,col] > df.iloc[row + 1,col + 1]):
-                df.iloc[row,col] += df.iloc[row + 1,col]
-            else:
-                df.iloc[row,col] += df.iloc[row + 1,col + 1]
+        for i in range(2, n):
+            tri[i][0] = tri[i][0] + tri[i - 1][0]
+            tri[i][i] = tri[i][i] + tri[i - 1][i - 1]
 
-    return df.iloc[0,0]
+            for j in range(1, i):
 
-print(Add_V(data,999,999))
-#print(data.shape)
+                if tri[i][j] + tri[i - 1][j - 1] >= tri[i][j] + tri[i - 1][j]:
+                    tri[i][j] = tri[i][j] + tri[i - 1][j - 1]
+                else:
+                    tri[i][j] = tri[i][j] + tri[i - 1][j]
+
+        print(max(tri[n - 1]))
+
+    maxSum(data, len(data))
+
+
+
+
